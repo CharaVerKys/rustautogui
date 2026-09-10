@@ -134,7 +134,7 @@ impl Screen {
     }
     #[cfg(not(feature = "lite"))]
     /// first order capture screen function. it captures screen image and stores it as vector in self.pixel_data
-    fn capture_screen(&mut self) -> Result<(), AutoGuiError> {
+    pub(crate) fn capture_screen(&mut self) -> Result<(), AutoGuiError> {
         unsafe {
             let ximage = XGetImage(
                 self.display,

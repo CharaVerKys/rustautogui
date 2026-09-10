@@ -35,6 +35,13 @@ use core::{
     screen::Screen,
 };
 
+///height and width dynamic, depth fixed to 3
+pub struct ImageHWd3{
+    height : u32,
+    width : u32,
+    data : Vec<u8>,
+}
+
 // opencl stuff
 #[cfg(feature = "opencl")]
 use crate::data::{DevicesInfo, OpenClData};
@@ -257,6 +264,18 @@ impl RustAutoGui {
     pub fn save_screenshot(&mut self, path: &str) -> Result<(), AutoGuiError> {
         self.screen.grab_screenshot(path)?;
         Ok(())
+    }
+    #[cfg(not(feature = "lite"))]
+    /// saves screenshot and return it
+    pub fn screenshot(&mut self,
+        ) -> Result<ImageHWd3, AutoGuiError> {
+        self.screen.capture_screen()?;
+        // let image = self.convert_bitmap_to_rgba()?;
+        Ok(ImageHWd3{
+            width : self.screen.screen_width as u32,
+            height : self.screen.screen_height as u32,
+            data : self.screen.screen_data.pixel_data.clone()
+        })
     }
     #[cfg(feature = "opencl")]
     pub fn list_devices(&self) {

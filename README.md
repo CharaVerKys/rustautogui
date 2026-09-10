@@ -1,3 +1,7 @@
+
+omg there so many different things wrong with this lib
+
+
 # RustAutoGUI
 
 RustAutoGUI crate, made after Al Sweigarts library PyAutoGUI for python.
@@ -7,7 +11,7 @@ The crate works on Windows, Linux and Macos.
 
 Main functions:
 
-- capture screen
+- capture screen -- lie! it make screenshot into file, not capture, fixing this is why i forked
 - find image on screen
 - move mouse to pixel coordinate
 - click mouse buttons

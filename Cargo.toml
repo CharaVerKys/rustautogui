@@ -12,6 +12,8 @@ categories = ["gui", "development-tools"]
 exclude = ["testspeed.gif", "tests/testing_images/"]
 repository = "https://github.com/DavorMar/rustautogui"
 
+[lib]
+doctest = false
 
 [dependencies]
 rustfft = { version = "6.2.0", optional = true }
