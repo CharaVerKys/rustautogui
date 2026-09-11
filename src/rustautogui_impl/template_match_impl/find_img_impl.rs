@@ -72,6 +72,68 @@ impl crate::RustAutoGui {
         Ok(Some(locations_adjusted))
     }
 
+    //? this api suuucks
+    //* this is directly copy pasted code, can reduce copy paste by making another function 
+    //*   for getting locations variable
+
+    /// Searches for prepared template on screen.
+    /// On windows only main monitor search is supported, while on linux, all monitors work.
+    /// more details in README
+    #[cfg(not(feature = "lite"))]
+    #[allow(unused_variables)]
+    pub fn find_image_on_screen_rect(
+        &mut self,
+        precision: f32,
+        //? x y w h
+    ) -> Result<Option<Vec<((u32,u32,u32,u32), f32)>>, AutoGuiError> {
+        /// searches for image on screen and returns found locations in vector format
+        let image: ImageBuffer<Luma<u8>, Vec<u8>> = self
+            .screen
+            .grab_screen_image_grayscale(&self.template_data.region)?;
+
+        if self.debug {
+            let debug_path = Path::new("debug");
+            if !debug_path.exists() {
+                match fs::create_dir_all(debug_path) {
+                    Ok(_) => {
+                        println!("Created a debug folder in your root for saving segmented template images");
+                        match image.save("debug/screen_capture.png") {
+                            Ok(_) => (),
+                            Err(x) => println!("{}", x),
+                        };
+                    }
+                    Err(x) => {
+                        println!("Failed to create debug folder");
+                        println!("{}", x);
+                    }
+                };
+            }
+        };
+
+        #[cfg(target_os = "macos")]
+        let locations = match self.run_macos_xcorr_with_backup(image, precision)? {
+            Some(x) => x,
+            None => return Ok(None),
+        };
+        #[cfg(not(target_os = "macos"))]
+        let locations = match self.run_x_corr(image, precision)? {
+            Some(x) => x,
+            None => return Ok(None),
+        };
+
+        let locations_adjusted/*: Vec<(u32, u32, f32)>*/ = locations
+            .iter()
+            .map(|(mut x, mut y, corr)| {
+                x += self.template_data.region.0;
+                y += self.template_data.region.1;
+                ((x, y, self.template_width, self.template_height), *corr)
+            })
+            .collect();
+
+        Ok(Some(locations_adjusted))
+    }
+
+
     // for macOS with retina display, two runs are made. One for resized template
     // and if not found , then second for normal sized template
     // since the function recursively calls find_stored_image_on_screen -> run_macos_xcorr_with_backup
