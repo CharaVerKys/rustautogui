@@ -30,6 +30,18 @@ pub fn load_image_rgba(location: &str) -> Result<ImageBuffer<Rgba<u8>, Vec<u8>>,
     let img = img.decode()?;
     Ok(img.to_rgba8()) // return rgba image
 }
+
+//? there so many fucking things wrong with this lib for real
+
+#[cfg(not(feature = "lite"))]
+/// Loads image from the provided path and converts to RGBA format
+/// Returns image in image::ImageBuffer format
+pub fn load_image_rgb(location: &str) -> Result<ImageBuffer<Rgb<u8>, Vec<u8>>, AutoGuiError> {
+    let img = image::ImageReader::open(location)?;
+    let img = img.decode()?;
+    Ok(img.to_rgb8()) // return rgba image
+}
+
 #[cfg(not(feature = "lite"))]
 pub fn check_imagebuffer_color_scheme<P, T>(
     image: &ImageBuffer<P, Vec<T>>,

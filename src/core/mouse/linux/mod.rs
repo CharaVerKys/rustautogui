@@ -24,6 +24,7 @@ impl Mouse {
     }
 
     /// moves mouse to x, y pixel coordinate on screen
+    //? seconds, time is seconds
     pub fn move_mouse_to_pos(&self, x: i32, y: i32, moving_time: f32) -> Result<(), AutoGuiError> {
         // if no moving time, then instant move is executed
         unsafe {

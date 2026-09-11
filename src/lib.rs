@@ -42,6 +42,10 @@ pub struct ImageHWd3{
     data : Vec<u8>,
 }
 
+pub use image::ImageBuffer;
+pub use image::Rgb;
+
+
 // opencl stuff
 #[cfg(feature = "opencl")]
 use crate::data::{DevicesInfo, OpenClData};

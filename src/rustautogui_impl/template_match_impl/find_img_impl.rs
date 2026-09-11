@@ -60,7 +60,7 @@ impl crate::RustAutoGui {
             None => return Ok(None),
         };
 
-        let locations_ajusted: Vec<(u32, u32, f32)> = locations
+        let locations_adjusted: Vec<(u32, u32, f32)> = locations
             .iter()
             .map(|(mut x, mut y, corr)| {
                 x = x + self.template_data.region.0 + (self.template_width / 2);
@@ -69,7 +69,7 @@ impl crate::RustAutoGui {
             })
             .collect();
 
-        Ok(Some(locations_ajusted))
+        Ok(Some(locations_adjusted))
     }
 
     // for macOS with retina display, two runs are made. One for resized template

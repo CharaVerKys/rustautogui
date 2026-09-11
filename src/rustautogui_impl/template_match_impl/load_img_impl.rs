@@ -301,7 +301,7 @@ impl crate::RustAutoGui {
     pub fn prepare_template_from_imagebuffer<P, T>(
         &mut self,
         image: ImageBuffer<P, Vec<T>>,
-        region: Option<(u32, u32, u32, u32)>,
+        region: Option<(u32, u32, u32, u32)>, // ! x y width height
         match_mode: MatchMode,
     ) -> Result<(), AutoGuiError>
     where
@@ -310,6 +310,28 @@ impl crate::RustAutoGui {
     {
         let color_scheme = imgtools::check_imagebuffer_color_scheme(&image)?;
         let luma_img = imgtools::convert_t_imgbuffer_to_luma(&image, color_scheme)?;
+        self.prepare_template_picture_bw(luma_img, region, match_mode, None, None)?;
+        Ok(())
+    }
+
+    //? THIS API SUCKS SO MUCH
+    //? WORST FUCKING API OUT THERE
+    //? i did right to vendor it
+
+    #[cfg(not(feature = "lite"))]
+    /// prepare from imagebuffer, works only on types RGB/RGBA/Luma
+    pub fn prepare_template_from_imagebuffer_ref<P, T>(
+        &mut self,
+        image: &ImageBuffer<P, Vec<T>>,
+        region: Option<(u32, u32, u32, u32)>,
+        match_mode: MatchMode,
+    ) -> Result<(), AutoGuiError>
+    where
+        P: Pixel<Subpixel = T> + 'static,
+        T: Primitive + ToPrimitive + 'static,
+    {
+        let color_scheme = imgtools::check_imagebuffer_color_scheme(image)?;
+        let luma_img = imgtools::convert_t_imgbuffer_to_luma(image, color_scheme)?;
         self.prepare_template_picture_bw(luma_img, region, match_mode, None, None)?;
         Ok(())
     }

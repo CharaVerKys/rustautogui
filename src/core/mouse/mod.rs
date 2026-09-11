@@ -16,6 +16,7 @@ pub use macos::Mouse;
 #[cfg(target_os = "linux")]
 pub use linux::Mouse;
 
+#[derive(Debug, Clone, Copy)]
 pub enum MouseClick {
     LEFT,
     RIGHT,
